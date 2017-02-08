@@ -17,13 +17,20 @@ abstract class Tanker
      * @var array
      */
     protected $fields = [];
-    
+
     /**
      * Data keyed by id.
      *
      * @var array
      */
     protected $data = [];
+
+    /**
+     * Field suffix.
+     *
+     * @var string
+     */
+    protected $suffix = '_data';
     
     /**
      * Fetch data for given ids.
@@ -45,7 +52,23 @@ abstract class Tanker
 
         return $this;
     }
+
+    public function item(&$item)
+    {
+        $this->collections[] = [&$item];
     
+        return $this;
+    }
+
+    /**
+     * Setter for suffix
+     * @param string $suffix
+     */
+    public function setSuffix($suffix)
+    {
+        $this->suffix = $suffix;
+    }
+
     /**
      * Add fields.
      *
@@ -110,12 +133,14 @@ abstract class Tanker
         foreach ($this->collections as $ci => &$collection) {
             foreach ($collection as $ii => &$item) {
                 foreach ((array) $this->fields[$ci] as $field) {
+                    $dataFieldName = $field . $this->suffix;
+                    
                     if (is_array($item[$field])) {
                         foreach ($item[$field] as $id) {
-                            $item[$field . "_data"][] = $this->findDataById($id);
+                            $item[$dataFieldName][] = $this->findDataById($id);
                         }
                     } else {
-                        $item[$field . "_data"] = $this->findDataById($item[$field]);
+                        $item[$dataFieldName] = $this->findDataById($item[$field]);
                     }
                 }
             }

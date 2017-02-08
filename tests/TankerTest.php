@@ -1,11 +1,11 @@
 <?php
 
-namespace Arrilot\Tests\DotEnv;
+namespace Arrilot\Tests\Tanker;
 
 use Arrilot\Tests\Tanker\Stubs\FooTanker;
 use PHPUnit_Framework_TestCase;
 
-class DotEnvTest extends PHPUnit_Framework_TestCase
+class TankerTest extends PHPUnit_Framework_TestCase
 {
     public function test_it_can_fill_a_basic_collection()
     {
@@ -33,6 +33,42 @@ class DotEnvTest extends PHPUnit_Framework_TestCase
             [
                 'file' => 1,
                 'file_data' => [
+                    'id' => 1,
+                    'foo' => 'bar'
+                ]
+            ],
+        ];
+        
+        $this->assertEquals($expected, $collection);
+    }
+    
+    public function test_it_can_fill_a_basic_collection_using_suffix()
+    {
+        $tanker = new FooTanker();
+        $collection = [
+            [
+                'file' => 2,
+            ],
+            [
+                'file' => 1,
+            ],
+        ];
+    
+        $tanker->setSuffix('_DATA');
+        $tanker->collection($collection)->fields('file')->fill();
+        
+        
+        $expected = [
+            [
+                'file' => 2,
+                'file_DATA' => [
+                    'id' => 2,
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'file' => 1,
+                'file_DATA' => [
                     'id' => 1,
                     'foo' => 'bar'
                 ]
@@ -134,10 +170,63 @@ class DotEnvTest extends PHPUnit_Framework_TestCase
                 'file2' => [1, ''],
             ]
         ];
+
+        $tanker->collection($collection)->fields('file', 'file2')->fill();
+
+        $expected = [
+            [
+                'file' => 2,
+                'file2' => 3,
+                'file_data' => [
+                    'id' => 2,
+                    'foo' => 'bar'
+                ],
+                'file2_data' => [
+                    'id' => 3,
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'file' => [3, 4],
+                'file2' => [1, ''],
+                'file_data' => [
+                    [
+                        'id' => 3,
+                        'foo' => 'bar'
+                    ],
+                    [
+                        'id' => 4,
+                        'foo' => 'bar'
+                    ]
+                ],
+                'file2_data' => [
+                    [
+                        'id' => 1,
+                        'foo' => 'bar'
+                    ],
+                    []
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $collection);
+    }
+    
+    public function test_it_can_fill_a_collection_with_multiple_fields_passed_as_array()
+    {
+        $tanker = new FooTanker();
+        $collection = [
+            [
+                'file' => 2,
+                'file2' => 3,
+            ],
+            [
+                'file' => [3, 4],
+                'file2' => [1, ''],
+            ]
+        ];
         
-        $tanker->collection($collection)->fields('file');
-        $tanker->collection($collection)->fields('file2');
-        $tanker->fill();
+        $tanker->collection($collection)->fields(['file', 'file2'])->fill();
         
         $expected = [
             [
@@ -176,5 +265,75 @@ class DotEnvTest extends PHPUnit_Framework_TestCase
         ];
         
         $this->assertEquals($expected, $collection);
+    }
+    
+    public function test_it_can_fill_a_single_item()
+    {
+        $tanker = new FooTanker();
+        $item = [
+            'file' => 2,
+        ];
+        
+        $tanker->item($item)->fields('file')->fill();
+        
+        
+        $expected = [
+            'file' => 2,
+            'file_data' => [
+                'id' => 2,
+                'foo' => 'bar'
+            ]
+        ];
+        
+        $this->assertEquals($expected, $item);
+    }
+
+    public function test_it_can_fill_a_single_item_and_a_collection_at_the_same_time()
+    {
+        $tanker = new FooTanker();
+
+        $item = [
+            'file' => 2,
+        ];
+
+        $collection = [
+            [
+                'file' => 2,
+            ],
+            [
+                'file' => 1,
+            ],
+        ];
+    
+        $tanker->item($item)->fields('file');
+        $tanker->collection($collection)->fields('file')->fill();
+    
+        $expected1 = [
+            'file' => 2,
+            'file_data' => [
+                'id' => 2,
+                'foo' => 'bar'
+            ]
+        ];
+
+        $expected2 = [
+            [
+                'file' => 2,
+                'file_data' => [
+                    'id' => 2,
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'file' => 1,
+                'file_data' => [
+                    'id' => 1,
+                    'foo' => 'bar'
+                ]
+            ],
+        ];
+        
+        $this->assertEquals($expected1, $item);
+        $this->assertEquals($expected2, $collection);
     }
 }
