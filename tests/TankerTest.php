@@ -336,4 +336,38 @@ class TankerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected1, $item);
         $this->assertEquals($expected2, $collection);
     }
+    
+    public function test_it_can_fill_a_collection_using_config()
+    {
+        $config = [
+            'select' => ['foo'],
+        ];
+        $tanker = new FooTanker($config);
+        $collection = [
+            [
+                'file' => 2,
+            ],
+            [
+                'file' => 1,
+            ],
+        ];
+        $tanker->collection($collection)->fields('file')->fill();
+    
+        $expected = [
+            [
+                'file'      => 2,
+                'file_data' => [
+                    'foo' => 'bar'
+                ]
+            ],
+            [
+                'file'      => 1,
+                'file_data' => [
+                    'foo' => 'bar'
+                ]
+            ],
+        ];
+    
+        $this->assertEquals($expected, $collection);
+    }
 }

@@ -33,6 +33,15 @@ abstract class Tanker
     protected $suffix = '_data';
     
     /**
+     * Tanker constructor.
+     * @param array $config
+     */
+    public function __construct($config = [])
+    {
+        $this->config = $config;
+    }
+
+    /**
      * Fetch data for given ids.
      *
      * @param array $ids
@@ -85,7 +94,7 @@ abstract class Tanker
 
         return $this;
     }
-
+    
     /**
      * Fill fields in each collection.
      *
