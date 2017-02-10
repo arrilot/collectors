@@ -31,9 +31,10 @@ abstract class Tanker
      * @var string
      */
     protected $suffix = '_data';
-    
+
     /**
      * Tanker constructor.
+     *
      * @param array $config
      */
     public function __construct($config = [])
@@ -45,14 +46,16 @@ abstract class Tanker
      * Fetch data for given ids.
      *
      * @param array $ids
+     *
      * @return array
      */
     abstract protected function fetch(array $ids);
-    
+
     /**
-     * Add collection
+     * Add collection.
      *
      * @param $collection
+     *
      * @return $this
      */
     public function collection(&$collection)
@@ -65,12 +68,13 @@ abstract class Tanker
     public function item(&$item)
     {
         $this->collections[] = [&$item];
-    
+
         return $this;
     }
 
     /**
-     * Setter for suffix
+     * Setter for suffix.
+     *
      * @param string $suffix
      */
     public function setSuffix($suffix)
@@ -82,6 +86,7 @@ abstract class Tanker
      * Add fields.
      *
      * @param $fields
+     *
      * @return $this
      */
     public function fields($fields)
@@ -94,7 +99,7 @@ abstract class Tanker
 
         return $this;
     }
-    
+
     /**
      * Fill fields in each collection.
      *
@@ -112,7 +117,7 @@ abstract class Tanker
 
         $this->fillCollectionsWithData();
     }
-    
+
     /**
      * Pluck all ids we need.
      *
@@ -125,17 +130,17 @@ abstract class Tanker
             foreach ($collection as $item) {
                 foreach ((array) $this->fields[$ci] as $field) {
                     foreach ((array) $item[$field] as $id) {
-                        if ((int)$id) {
-                            $ids[] = (int)$id;
+                        if ((int) $id) {
+                            $ids[] = (int) $id;
                         }
                     }
                 }
             }
         }
-        
+
         return array_unique($ids);
     }
-    
+
     /**
      * Fill collections with data.
      *
@@ -146,8 +151,8 @@ abstract class Tanker
         foreach ($this->collections as $ci => &$collection) {
             foreach ($collection as $ii => &$item) {
                 foreach ((array) $this->fields[$ci] as $field) {
-                    $dataFieldName = $field . $this->suffix;
-                    
+                    $dataFieldName = $field.$this->suffix;
+
                     if (is_array($item[$field])) {
                         foreach ($item[$field] as $id) {
                             $id = (int) $id;
@@ -162,9 +167,10 @@ abstract class Tanker
             }
         }
     }
-    
+
     /**
      * @param $id
+     *
      * @return array
      */
     protected function findDataById($id)
