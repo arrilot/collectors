@@ -142,11 +142,11 @@ class TankerTest extends PHPUnit_Framework_TestCase
             [
                 'file' => [3, 4],
                 'file_data' => [
-                    [
+                    3 => [
                         'id' => 3,
                         'foo' => 'bar'
                     ],
-                    [
+                    4 => [
                         'id' => 4,
                         'foo' => 'bar'
                     ]
@@ -190,21 +190,20 @@ class TankerTest extends PHPUnit_Framework_TestCase
                 'file' => [3, 4],
                 'file2' => [1, ''],
                 'file_data' => [
-                    [
+                    3 => [
                         'id' => 3,
                         'foo' => 'bar'
                     ],
-                    [
+                    4 => [
                         'id' => 4,
                         'foo' => 'bar'
                     ]
                 ],
                 'file2_data' => [
-                    [
+                    1 => [
                         'id' => 1,
                         'foo' => 'bar'
-                    ],
-                    []
+                    ]
                 ]
             ],
         ];
@@ -245,21 +244,20 @@ class TankerTest extends PHPUnit_Framework_TestCase
                 'file' => [3, 4],
                 'file2' => [1, ''],
                 'file_data' => [
-                    [
+                    3 => [
                         'id' => 3,
                         'foo' => 'bar'
                     ],
-                    [
+                    4 => [
                         'id' => 4,
                         'foo' => 'bar'
                     ]
                 ],
                 'file2_data' => [
-                    [
+                    1 => [
                         'id' => 1,
                         'foo' => 'bar'
-                    ],
-                    []
+                    ]
                 ]
             ],
         ];

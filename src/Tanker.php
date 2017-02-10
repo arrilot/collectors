@@ -150,7 +150,10 @@ abstract class Tanker
                     
                     if (is_array($item[$field])) {
                         foreach ($item[$field] as $id) {
-                            $item[$dataFieldName][] = $this->findDataById($id);
+                            $id = (int) $id;
+                            if ($id) {
+                                $item[$dataFieldName][$id] = $this->findDataById($id);
+                            }
                         }
                     } else {
                         $item[$dataFieldName] = $this->findDataById($item[$field]);
