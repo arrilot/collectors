@@ -11,6 +11,7 @@ class FooTanker extends Tanker
      * Fetch data for given ids.
      *
      * @param array $ids
+     *
      * @return array
      */
     public function fetch(array $ids)
@@ -24,13 +25,13 @@ class FooTanker extends Tanker
         $data = [];
         foreach ($ids as $id) {
             $data[$id] = array_filter([
-                'id' => $id,
+                'id'  => $id,
                 'foo' => 'bar',
             ], function ($key) use ($select) {
                 return in_array($key, $select);
             }, ARRAY_FILTER_USE_KEY);
         }
-        
+
         return $data;
     }
 }
