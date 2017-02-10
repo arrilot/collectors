@@ -1,8 +1,8 @@
 <?php
 
-namespace Arrilot\Tests\Tanker\Stubs;
+namespace Arrilot\Tests\Tankers\Stubs;
 
-use Arrilot\Tanker\Tanker;
+use Arrilot\Tankers\Tanker;
 
 class FooTanker extends Tanker
 {

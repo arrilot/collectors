@@ -1,6 +1,6 @@
 <?php
 
-namespace Arrilot\Tanker;
+namespace Arrilot\Tankers;
 
 abstract class Tanker
 {

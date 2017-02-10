@@ -1,8 +1,8 @@
 <?php
 
-namespace Arrilot\Tests\Tanker;
+namespace Arrilot\Tests\Tankers;
 
-use Arrilot\Tests\Tanker\Stubs\FooTanker;
+use Arrilot\Tests\Tankers\Stubs\FooTanker;
 use PHPUnit_Framework_TestCase;
 
 class TankerTest extends PHPUnit_Framework_TestCase
