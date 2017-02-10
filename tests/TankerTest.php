@@ -370,4 +370,29 @@ class TankerTest extends PHPUnit_Framework_TestCase
     
         $this->assertEquals($expected, $collection);
     }
+    
+    public function test_it_can_return_if_no_ids_are_found()
+    {
+        $tanker = new FooTanker();
+        $collection = [
+            [
+                'file' => '',
+            ],
+            [
+                'file' => [],
+            ],
+        ];
+        $tanker->collection($collection)->fields('file')->fill();
+        
+        $expected = [
+            [
+                'file'      => ''
+            ],
+            [
+                'file'      => []
+            ],
+        ];
+        
+        $this->assertEquals($expected, $collection);
+    }
 }

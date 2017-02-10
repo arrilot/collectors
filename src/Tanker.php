@@ -104,6 +104,10 @@ abstract class Tanker
     {
         $ids = $this->pluckIdsFromCollections();
 
+        if (!$ids) {
+            return;
+        }
+
         $this->data = $this->fetch($ids);
 
         $this->fillCollectionsWithData();

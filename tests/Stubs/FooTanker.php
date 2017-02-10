@@ -3,6 +3,7 @@
 namespace Arrilot\Tests\Tankers\Stubs;
 
 use Arrilot\Tankers\Tanker;
+use RuntimeException;
 
 class FooTanker extends Tanker
 {
@@ -14,6 +15,10 @@ class FooTanker extends Tanker
      */
     public function fetch(array $ids)
     {
+        if (!$ids) {
+            throw new RuntimeException('This line must never be reached.');
+        }
+
         $select = empty($this->config['select']) ? ['id', 'foo'] : $this->config['select'];
 
         $data = [];
