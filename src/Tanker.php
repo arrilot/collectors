@@ -26,6 +26,13 @@ abstract class Tanker
     protected $select = null;
 
     /**
+     * Additional filter.
+     *
+     * @var mixed
+     */
+    protected $where = null;
+
+    /**
      * Data keyed by id.
      *
      * @var array
@@ -88,6 +95,19 @@ abstract class Tanker
     public function select($select)
     {
         $this->select = $select;
+
+        return $this;
+    }
+
+    /**
+     * Setter for where.
+     *
+     * @param mixed $where
+     * @return $this
+     */
+    public function where($where)
+    {
+        $this->where = $where;
 
         return $this;
     }
