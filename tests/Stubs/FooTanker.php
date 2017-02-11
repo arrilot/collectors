@@ -20,7 +20,7 @@ class FooTanker extends Tanker
             throw new RuntimeException('This line must never be reached.');
         }
 
-        $select = empty($this->config['select']) ? ['id', 'foo'] : $this->config['select'];
+        $select = is_null($this->select) ? ['id', 'foo'] : $this->select;
 
         $data = [];
         foreach ($ids as $id) {

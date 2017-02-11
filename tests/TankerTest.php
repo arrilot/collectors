@@ -331,12 +331,9 @@ class TankerTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected2, $collection);
     }
 
-    public function test_it_can_fill_a_collection_using_config()
+    public function test_it_can_fill_a_collection_according_to_select()
     {
-        $config = [
-            'select' => ['foo'],
-        ];
-        $tanker = new FooTanker($config);
+        $tanker = new FooTanker();
         $collection = [
             [
                 'file' => 2,
@@ -345,7 +342,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
                 'file' => 1,
             ],
         ];
-        $tanker->collection($collection)->fields('file')->fill();
+        $tanker->collection($collection)->fields('file')->select(['foo'])->fill();
 
         $expected = [
             [

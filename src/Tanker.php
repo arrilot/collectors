@@ -19,6 +19,13 @@ abstract class Tanker
     protected $fields = [];
 
     /**
+     * Fields that should be selected.
+     *
+     * @var mixed
+     */
+    protected $select = null;
+
+    /**
      * Data keyed by id.
      *
      * @var array
@@ -31,16 +38,6 @@ abstract class Tanker
      * @var string
      */
     protected $suffix = '_data';
-
-    /**
-     * Tanker constructor.
-     *
-     * @param array $config
-     */
-    public function __construct($config = [])
-    {
-        $this->config = $config;
-    }
 
     /**
      * Fetch data for given ids.
@@ -80,6 +77,19 @@ abstract class Tanker
     public function setSuffix($suffix)
     {
         $this->suffix = $suffix;
+    }
+
+    /**
+     * Setter for select.
+     *
+     * @param mixed $select
+     * @return $this
+     */
+    public function select($select)
+    {
+        $this->select = $select;
+
+        return $this;
     }
 
     /**
