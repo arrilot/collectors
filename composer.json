@@ -3,8 +3,7 @@
   "type": "library",
   "license": "MIT",
   "keywords": [
-    "tanker",
-    "filler"
+    "collectors"
   ],
   "authors": [
     {
