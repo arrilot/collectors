@@ -8,13 +8,13 @@ use RuntimeException;
 class FooTanker extends Tanker
 {
     /**
-     * Fetch data for given ids.
+     * Get data for given ids.
      *
      * @param array $ids
      *
      * @return array
      */
-    public function fetch(array $ids)
+    public function getByIds(array $ids)
     {
         if (!$ids) {
             throw new RuntimeException('This line must never be reached.');

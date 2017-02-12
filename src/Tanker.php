@@ -47,13 +47,13 @@ abstract class Tanker
     protected $suffix = '_data';
 
     /**
-     * Fetch data for given ids.
+     * Get data for given ids.
      *
      * @param array $ids
      *
      * @return array
      */
-    abstract protected function fetch(array $ids);
+    abstract protected function getByIds(array $ids);
 
     /**
      * Add collection.
@@ -131,19 +131,29 @@ abstract class Tanker
     }
 
     /**
+     * Get data as array.
+     *
+     * @return array
+     */
+    public function get()
+    {
+        $ids = $this->pluckIdsFromCollections();
+
+        if (!$ids) {
+            return [];
+        }
+
+        return $this->getByIds($ids);
+    }
+
+    /**
      * Fill fields in each collection.
      *
      * @return void
      */
     public function fill()
     {
-        $ids = $this->pluckIdsFromCollections();
-
-        if (!$ids) {
-            return;
-        }
-
-        $this->data = $this->fetch($ids);
+        $this->data = $this->get();
 
         $this->fillCollectionsWithData();
     }
@@ -184,14 +194,18 @@ abstract class Tanker
                     $dataFieldName = $field.$this->suffix;
 
                     if (is_array($item[$field])) {
-                        foreach ($item[$field] as $id) {
-                            $id = (int) $id;
-                            if ($id) {
-                                $item[$dataFieldName][$id] = $this->findDataById($id);
+                        if (empty($item[$field])) {
+                            $item[$dataFieldName] = [];
+                        } else {
+                            foreach ($item[$field] as $id) {
+                                $id = (int) $id;
+                                if ($id) {
+                                    $item[$dataFieldName][$id] = $this->findInLocalDataById($id);
+                                }
                             }
                         }
                     } else {
-                        $item[$dataFieldName] = $this->findDataById($item[$field]);
+                        $item[$dataFieldName] = $this->findInLocalDataById($item[$field]);
                     }
                 }
             }
@@ -203,7 +217,7 @@ abstract class Tanker
      *
      * @return array
      */
-    protected function findDataById($id)
+    protected function findInLocalDataById($id)
     {
         return $id && isset($this->data[$id]) ? $this->data[$id] : [];
     }

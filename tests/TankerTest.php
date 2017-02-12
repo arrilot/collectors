@@ -378,12 +378,48 @@ class TankerTest extends PHPUnit_Framework_TestCase
         $expected = [
             [
                 'file'      => '',
+                'file_data' => [],
             ],
             [
                 'file'      => [],
+                'file_data' => [],
             ],
         ];
 
         $this->assertEquals($expected, $collection);
+    }
+
+    public function test_it_can_get_data_from_a_single_item_and_a_collection_at_the_same_time()
+    {
+        $tanker = new FooTanker();
+        
+        $item = [
+            'id' => 3,
+            'file' => 2,
+        ];
+
+        $collection = [
+            [
+                'id' => 4,
+                'file2' => 1,
+            ]
+        ];
+
+        $tanker->item($item)->fields('file');
+        $tanker->collection($collection)->fields('file2');
+        $data = $tanker->get();
+
+        $expected = [
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
+            ],
+            1 => [
+                'id'  => 1,
+                'foo' => 'bar',
+            ],
+        ];
+
+        $this->assertEquals($expected, $data);
     }
 }
