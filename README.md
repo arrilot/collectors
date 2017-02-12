@@ -15,6 +15,27 @@ Collectors scan across given fields in items/collections for ids and fetch detai
 
 ## Usage
 
+First of all you need to create your own collector class.
+
+```php
+
+use Arrilot\Collectors\Collector;
+
+class FooCollector extends Collector
+{
+    /**
+     * Get data for given ids.
+     *
+     * @param array $ids
+     * @return array
+     */
+    public function getByIds(array $ids)
+    {
+        ...
+    }
+}
+```
+
 Example 1
 ```php
     $elements = [
