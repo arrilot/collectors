@@ -1,5 +1,5 @@
 {
-  "name": "arrilot/tankers",
+  "name": "arrilot/collectors",
   "type": "library",
   "license": "MIT",
   "keywords": [
@@ -12,7 +12,7 @@
       "email": "nekrasov.ilya90@gmail.com"
     }
   ],
-  "homepage": "https://github.com/arrilot/tankers",
+  "homepage": "https://github.com/arrilot/collectors",
   "require": {
     "php": ">=5.6.0"
   },
@@ -21,12 +21,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Arrilot\\Tankers\\": "src/"
+      "Arrilot\\Collectors\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Arrilot\\Tests\\Tankers\\": "tests/"
+      "Arrilot\\Tests\\Collectors\\": "tests/"
     }
   },
   "config": {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Arrilot\Tankers;
+namespace Arrilot\Collectors;
 
-abstract class Tanker
+abstract class Collector
 {
     /**
      * Collections to be filled.

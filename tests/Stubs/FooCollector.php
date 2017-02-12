@@ -1,11 +1,11 @@
 <?php
 
-namespace Arrilot\Tests\Tankers\Stubs;
+namespace Arrilot\Tests\Collectors\Stubs;
 
-use Arrilot\Tankers\Tanker;
+use Arrilot\Collectors\Collector;
 use RuntimeException;
 
-class FooTanker extends Tanker
+class FooCollector extends Collector
 {
     /**
      * Get data for given ids.

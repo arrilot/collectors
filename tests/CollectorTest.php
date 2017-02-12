@@ -1,15 +1,15 @@
 <?php
 
-namespace Arrilot\Tests\Tankers;
+namespace Arrilot\Tests\Collectors;
 
-use Arrilot\Tests\Tankers\Stubs\FooTanker;
+use Arrilot\Tests\Collectors\Stubs\FooCollector;
 use PHPUnit_Framework_TestCase;
 
-class TankerTest extends PHPUnit_Framework_TestCase
+class CollectorTest extends PHPUnit_Framework_TestCase
 {
     public function test_it_can_fill_a_basic_collection()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
           [
               'file' => 2,
@@ -43,7 +43,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_basic_collection_using_suffix()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -78,7 +78,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_collection_with_empty_or_null_field()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -116,7 +116,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_collection_with_multivalue_fields()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -156,7 +156,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_collection_with_multiple_fields()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file'  => 2,
@@ -210,7 +210,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_collection_with_multiple_fields_passed_as_array()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file'  => 2,
@@ -264,7 +264,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_single_item()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $item = [
             'file' => 2,
         ];
@@ -284,7 +284,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_single_item_and_a_collection_at_the_same_time()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
 
         $item = [
             'file' => 2,
@@ -333,7 +333,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_fill_a_collection_according_to_select()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -364,7 +364,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_return_if_no_ids_are_found()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         $collection = [
             [
                 'file' => '',
@@ -391,7 +391,7 @@ class TankerTest extends PHPUnit_Framework_TestCase
 
     public function test_it_can_get_data_from_a_single_item_and_a_collection_at_the_same_time()
     {
-        $tanker = new FooTanker();
+        $tanker = new FooCollector();
         
         $item = [
             'id' => 3,
