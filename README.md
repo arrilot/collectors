@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/travis/arrilot/collectors/master.svg?style=flat)](https://travis-ci.org/arrilot/collectors)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/arrilot/collectors/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/arrilot/collectors/)
 
-# PHP Collectors
+# PHP Collectors (In development)
 
 ## Introduction
 
