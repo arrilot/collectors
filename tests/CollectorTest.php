@@ -7,9 +7,9 @@ use PHPUnit_Framework_TestCase;
 
 class CollectorTest extends PHPUnit_Framework_TestCase
 {
-    public function test_it_can_fill_a_basic_collection()
+    public function test_it_can_collect_from_a_basic_collection()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
           [
               'file' => 2,
@@ -19,66 +19,23 @@ class CollectorTest extends PHPUnit_Framework_TestCase
           ],
         ];
 
-        $tanker->collection($collection)->fields('file')->fill();
-
         $expected = [
-            [
-                'file'      => 2,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
             ],
-            [
-                'file'      => 1,
-                'file_data' => [
-                    'id'  => 1,
-                    'foo' => 'bar',
-                ],
+            1 => [
+                'id'  => 1,
+                'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->performQuery());
     }
 
-    public function test_it_can_fill_a_basic_collection_using_suffix()
+    public function test_it_can_collect_from_a_collection_with_empty_or_null_field()
     {
-        $tanker = new FooCollector();
-        $collection = [
-            [
-                'file' => 2,
-            ],
-            [
-                'file' => 1,
-            ],
-        ];
-
-        $tanker->setSuffix('_DATA');
-        $tanker->collection($collection)->fields('file')->fill();
-
-        $expected = [
-            [
-                'file'      => 2,
-                'file_DATA' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
-            ],
-            [
-                'file'      => 1,
-                'file_DATA' => [
-                    'id'  => 1,
-                    'foo' => 'bar',
-                ],
-            ],
-        ];
-
-        $this->assertEquals($expected, $collection);
-    }
-
-    public function test_it_can_fill_a_collection_with_empty_or_null_field()
-    {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -91,32 +48,19 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $tanker->collection($collection)->fields('file')->fill();
-
         $expected = [
-            [
-                'file'      => 2,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
-            ],
-            [
-                'file'      => '',
-                'file_data' => [],
-            ],
-            [
-                'file'      => '',
-                'file_data' => [],
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->performQuery());
     }
 
-    public function test_it_can_fill_a_collection_with_multivalue_fields()
+    public function test_it_can_collect_from_a_collection_with_multivalue_fields()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -126,37 +70,27 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $tanker->collection($collection)->fields('file')->fill();
-
         $expected = [
-            [
-                'file'      => 2,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
             ],
-            [
-                'file'      => [3, 4],
-                'file_data' => [
-                    3 => [
-                        'id'  => 3,
-                        'foo' => 'bar',
-                    ],
-                    4 => [
-                        'id'  => 4,
-                        'foo' => 'bar',
-                    ],
-                ],
+            3 => [
+                'id'  => 3,
+                'foo' => 'bar',
+            ],
+            4 => [
+                'id'  => 4,
+                'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals($expected,  $collector->fromCollection($collection, 'file')->performQuery());
     }
 
-    public function test_it_can_fill_a_collection_with_multiple_fields()
+    public function test_it_can_collect_from_a_collection_with_multiple_fields_passed_as_an_array()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
             [
                 'file'  => 2,
@@ -168,123 +102,48 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $tanker->collection($collection)->fields('file', 'file2')->fill();
-
         $expected = [
-            [
-                'file'      => 2,
-                'file2'     => 3,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
-                'file2_data' => [
-                    'id'  => 3,
-                    'foo' => 'bar',
-                ],
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
             ],
-            [
-                'file'      => [3, 4],
-                'file2'     => [1, ''],
-                'file_data' => [
-                    3 => [
-                        'id'  => 3,
-                        'foo' => 'bar',
-                    ],
-                    4 => [
-                        'id'  => 4,
-                        'foo' => 'bar',
-                    ],
-                ],
-                'file2_data' => [
-                    1 => [
-                        'id'  => 1,
-                        'foo' => 'bar',
-                    ],
-                ],
+            3 => [
+                'id'  => 3,
+                'foo' => 'bar',
+            ],
+            4 => [
+                'id'  => 4,
+                'foo' => 'bar',
+            ],
+            1 => [
+                'id'  => 1,
+                'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals($expected, $collector->fromCollection($collection, ['file', 'file2'])->performQuery());
     }
 
-    public function test_it_can_fill_a_collection_with_multiple_fields_passed_as_array()
+    public function test_it_can_collect_from_a_single_item()
     {
-        $tanker = new FooCollector();
-        $collection = [
-            [
-                'file'  => 2,
-                'file2' => 3,
-            ],
-            [
-                'file'  => [3, 4],
-                'file2' => [1, ''],
-            ],
-        ];
-
-        $tanker->collection($collection)->fields(['file', 'file2'])->fill();
-
-        $expected = [
-            [
-                'file'      => 2,
-                'file2'     => 3,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
-                'file2_data' => [
-                    'id'  => 3,
-                    'foo' => 'bar',
-                ],
-            ],
-            [
-                'file'      => [3, 4],
-                'file2'     => [1, ''],
-                'file_data' => [
-                    3 => [
-                        'id'  => 3,
-                        'foo' => 'bar',
-                    ],
-                    4 => [
-                        'id'  => 4,
-                        'foo' => 'bar',
-                    ],
-                ],
-                'file2_data' => [
-                    1 => [
-                        'id'  => 1,
-                        'foo' => 'bar',
-                    ],
-                ],
-            ],
-        ];
-
-        $this->assertEquals($expected, $collection);
-    }
-
-    public function test_it_can_fill_a_single_item()
-    {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $item = [
             'file' => 2,
         ];
 
-        $tanker->item($item)->fields('file')->fill();
-
         $expected = [
-            'file'      => 2,
-            'file_data' => [
+            2 => [
                 'id'  => 2,
                 'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $item);
+        $this->assertEquals($expected, $collector->fromItem($item, 'file')->performQuery());
     }
 
-    public function test_it_can_fill_a_single_item_and_a_collection_at_the_same_time()
+    public function test_it_can_collect_from_a_single_item_and_a_collection_at_the_same_time()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
 
         $item = [
             'file' => 2,
@@ -295,45 +154,34 @@ class CollectorTest extends PHPUnit_Framework_TestCase
                 'file' => 2,
             ],
             [
-                'file' => 1,
+                'file' => [1, 3]
             ],
         ];
 
-        $tanker->item($item)->fields('file');
-        $tanker->collection($collection)->fields('file')->fill();
+        $collector->fromItem($item, 'file');
+        $collector->fromCollection($collection, 'file');
 
-        $expected1 = [
-            'file'      => 2,
-            'file_data' => [
+        $expected = [
+            2 => [
                 'id'  => 2,
+                'foo' => 'bar',
+            ],
+            1 => [
+                'id'  => 1,
+                'foo' => 'bar',
+            ],
+            3 => [
+                'id'  => 3,
                 'foo' => 'bar',
             ],
         ];
 
-        $expected2 = [
-            [
-                'file'      => 2,
-                'file_data' => [
-                    'id'  => 2,
-                    'foo' => 'bar',
-                ],
-            ],
-            [
-                'file'      => 1,
-                'file_data' => [
-                    'id'  => 1,
-                    'foo' => 'bar',
-                ],
-            ],
-        ];
-
-        $this->assertEquals($expected1, $item);
-        $this->assertEquals($expected2, $collection);
+        $this->assertEquals($expected, $collector->performQuery());
     }
 
-    public function test_it_can_fill_a_collection_according_to_select()
+    public function test_it_can_collect_from_a_collection_according_to_select()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
             [
                 'file' => 2,
@@ -342,29 +190,22 @@ class CollectorTest extends PHPUnit_Framework_TestCase
                 'file' => 1,
             ],
         ];
-        $tanker->collection($collection)->fields('file')->select(['foo'])->fill();
 
         $expected = [
-            [
-                'file'      => 2,
-                'file_data' => [
-                    'foo' => 'bar',
-                ],
+            2 => [
+                'foo' => 'bar',
             ],
-            [
-                'file'      => 1,
-                'file_data' => [
-                    'foo' => 'bar',
-                ],
+            1 => [
+                'foo' => 'bar',
             ],
         ];
 
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->select(['foo'])->performQuery());
     }
 
     public function test_it_can_return_if_no_ids_are_found()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         $collection = [
             [
                 'file' => '',
@@ -373,25 +214,13 @@ class CollectorTest extends PHPUnit_Framework_TestCase
                 'file' => [],
             ],
         ];
-        $tanker->collection($collection)->fields('file')->fill();
 
-        $expected = [
-            [
-                'file'      => '',
-                'file_data' => [],
-            ],
-            [
-                'file'      => [],
-                'file_data' => [],
-            ],
-        ];
-
-        $this->assertEquals($expected, $collection);
+        $this->assertEquals([], $collector->fromCollection($collection, 'file')->performQuery());
     }
 
-    public function test_it_can_get_data_from_a_single_item_and_a_collection_at_the_same_time()
+    public function test_it_can_collect_data_from_a_single_item_and_a_collection_at_the_same_time()
     {
-        $tanker = new FooCollector();
+        $collector = new FooCollector();
         
         $item = [
             'id' => 3,
@@ -405,9 +234,8 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ]
         ];
 
-        $tanker->item($item)->fields('file');
-        $tanker->collection($collection)->fields('file2');
-        $data = $tanker->get();
+        $collector->fromItem($item, 'file');
+        $collector->fromCollection($collection, 'file2');
 
         $expected = [
             2 => [
@@ -420,6 +248,6 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $data);
+        $this->assertEquals($expected, $collector->performQuery());
     }
 }

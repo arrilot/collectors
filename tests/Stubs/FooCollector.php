@@ -11,10 +11,9 @@ class FooCollector extends Collector
      * Get data for given ids.
      *
      * @param array $ids
-     *
      * @return array
      */
-    public function getByIds(array $ids)
+    public function getList(array $ids)
     {
         if (!$ids) {
             throw new RuntimeException('This line must never be reached.');

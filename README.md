@@ -7,7 +7,7 @@
 
 ## Introduction
 
-Collectors scan across given fields in items/collections for ids and fetch detailed data from database ot
+Collectors scan across given fields in items/collections for ids and fetch detailed data from database or another storage
 
 ## Installation
 
@@ -29,77 +29,64 @@ class FooCollector extends Collector
      * @param array $ids
      * @return array
      */
-    public function getByIds(array $ids)
+    public function getList(array $ids)
     {
         ...
     }
 }
 ```
 
-Example 1
+Example
 ```php
     $elements = [
         ['id' => 1, 'files' => 1],
         ['id' => 2, 'files' => [2, 1]],
     ];
     
-    $tanker = new FooCollector();
-    $files = $tanker->collection($elements)->fields('files')->get();
+    $item = [
+        'id' => 3,
+        'another_files' => 3
+    ];
+    
+    $collector = new FooCollector();
+    $collector->fromCollection($elements, 'files');
+    $collector->fromItem($item, 'another_files');
+    $files = $collector->performQuery();
+    
     var_dump($files);
 
     // result
     /*
         array:2 [▼
-          1 => array:2 [▼
+          1 => array:3 [▼
               "id" => 1
-              "name" => "avatar.png"
+              "name" => "avatar.png",
+              "module" => "main",
           ]
-          2 => array:2 [▼
+          2 => array:3 [▼
               "id" => 2
-              "name" => "test.png"
-          ]
+              "name" => "test.png",
+              "module" => "main",
+          ],
+          3 => array:3 [▼
+               "id" => 3
+               "name" => "test2.png",
+               "module" => "main",
+          ],
         ]
     */
 ```
 
-Example 2
+You can pass `select` to `getlist` like that:
 ```php
-    $elements = [
-        ['id' => 1, 'files' => 1],
-        ['id' => 2, 'files' => [2, 1]],
-    ];
-    
-    $tanker = new FooCollector();
-    $tanker->collection($elements)->fields('files')->fill();
-    var_dump($elements);
+$files = $collector->select(['id', 'name'])->performQuery();
+// $this->select is ['id', 'name'] in `->getList()` and you can implement logic handling it.
+```
 
-    // result
-    /*
-        array:2 [▼
-            array:3 [▼
-                "id" => 1
-                "files" => 1,
-                "files_data" => array:2 [▼
-                  "id" => 2
-                  "name" => "test.png"
-                ]
-            ]
-            array:3 [▼
-                "id" => 2
-                "files" => [2, 1],
-                "files_data" => array:2 [▼
-                    array:2 [▼
-                        "id" => 2
-                        "name" => "avatar.png"
-                    ],
-                    array:2 [▼
-                        "id" => 1
-                        "name" => "avatar.png"
-                    ]
-                ]
-            ]
-        ]
-    */
+Same is true for an additional filter.
+```php
+$files = $collector->where(['active' => 1])->performQuery();
+// $this->where is ['active' => 1]
 ```
 
 ## Bridge packages

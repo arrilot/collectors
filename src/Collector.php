@@ -5,18 +5,11 @@ namespace Arrilot\Collectors;
 abstract class Collector
 {
     /**
-     * Collections to be filled.
+     * Ids that are collected from sources.
      *
      * @var array
      */
-    protected $collections = [];
-
-    /**
-     * Fields that should be filled in each corresponding collection.
-     *
-     * @var array
-     */
-    protected $fields = [];
+    protected $ids = [];
 
     /**
      * Fields that should be selected.
@@ -40,50 +33,43 @@ abstract class Collector
     protected $data = [];
 
     /**
-     * Field suffix.
-     *
-     * @var string
-     */
-    protected $suffix = '_data';
-
-    /**
      * Get data for given ids.
      *
      * @param array $ids
-     *
      * @return array
      */
-    abstract protected function getByIds(array $ids);
+    abstract protected function getList(array $ids);
 
     /**
-     * Add collection.
+     * Add a collection source.
      *
      * @param $collection
-     *
+     * @param mixed $fields
      * @return $this
      */
-    public function collection(&$collection)
+    public function fromCollection($collection, $fields)
     {
-        $this->collections[] = &$collection;
-
-        return $this;
-    }
-
-    public function item(&$item)
-    {
-        $this->collections[] = [&$item];
+        $fields = (array) $fields;
+        foreach ($collection as $item) {
+            $this->collectIdsFromItem($item, $fields);
+        }
 
         return $this;
     }
 
     /**
-     * Setter for suffix.
+     * Add an item source.
      *
-     * @param string $suffix
+     * @param $item
+     * @param mixed $fields
+     * @return $this
      */
-    public function setSuffix($suffix)
+    public function fromItem($item, $fields)
     {
-        $this->suffix = $suffix;
+        $fields = (array) $fields;
+        $this->collectIdsFromItem($item, $fields);
+
+        return $this;
     }
 
     /**
@@ -113,112 +99,43 @@ abstract class Collector
     }
 
     /**
-     * Add fields.
-     *
-     * @param $fields
-     *
-     * @return $this
-     */
-    public function fields($fields)
-    {
-        if (!is_array($fields)) {
-            $fields = func_get_args();
-        }
-
-        $this->fields[] = $fields;
-
-        return $this;
-    }
-
-    /**
-     * Get data as array.
+     * Perform main query.
      *
      * @return array
      */
-    public function get()
+    public function performQuery()
     {
-        $ids = $this->pluckIdsFromCollections();
-
-        if (!$ids) {
+        if (!$this->ids) {
             return [];
         }
 
-        return $this->getByIds($ids);
+        return $this->getList($this->getIdsWithoutDuplications());
     }
-
+    
     /**
-     * Fill fields in each collection.
+     * Collect ids from source and add them to $this->ids
      *
-     * @return void
+     * @param $item
+     * @param array $fields
      */
-    public function fill()
+    protected function collectIdsFromItem($item, array $fields)
     {
-        $this->data = $this->get();
-
-        $this->fillCollectionsWithData();
-    }
-
-    /**
-     * Pluck all ids we need.
-     *
-     * @return array
-     */
-    protected function pluckIdsFromCollections()
-    {
-        $ids = [];
-        foreach ($this->collections as $ci => $collection) {
-            foreach ($collection as $item) {
-                foreach ((array) $this->fields[$ci] as $field) {
-                    foreach ((array) $item[$field] as $id) {
-                        if ((int) $id) {
-                            $ids[] = (int) $id;
-                        }
-                    }
-                }
-            }
-        }
-
-        return array_unique($ids);
-    }
-
-    /**
-     * Fill collections with data.
-     *
-     * @param void
-     */
-    protected function fillCollectionsWithData()
-    {
-        foreach ($this->collections as $ci => &$collection) {
-            foreach ($collection as $ii => &$item) {
-                foreach ((array) $this->fields[$ci] as $field) {
-                    $dataFieldName = $field.$this->suffix;
-
-                    if (is_array($item[$field])) {
-                        if (empty($item[$field])) {
-                            $item[$dataFieldName] = [];
-                        } else {
-                            foreach ($item[$field] as $id) {
-                                $id = (int) $id;
-                                if ($id) {
-                                    $item[$dataFieldName][$id] = $this->findInLocalDataById($id);
-                                }
-                            }
-                        }
-                    } else {
-                        $item[$dataFieldName] = $this->findInLocalDataById($item[$field]);
-                    }
+        foreach ($fields as $field) {
+            foreach ((array) $item[$field] as $id) {
+                if ((int) $id) {
+                    $this->ids[] = (int) $id;
                 }
             }
         }
     }
 
     /**
-     * @param $id
+     * A faster alternative to array_unique.
      *
      * @return array
      */
-    protected function findInLocalDataById($id)
+    protected function getIdsWithoutDuplications()
     {
-        return $id && isset($this->data[$id]) ? $this->data[$id] : [];
+        return array_flip(array_flip($this->ids));
     }
 }
