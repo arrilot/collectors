@@ -85,7 +85,7 @@ $files = $collector->select(['id', 'name'])->performQuery();
 
 Same is true for an additional filter.
 ```php
-$collector->fromCollection($elements, 'files');
+$collector->where(['active' => 1])->performQuery();
 // $this->where is ['active' => 1]
 ```
 
