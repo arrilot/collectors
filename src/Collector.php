@@ -2,6 +2,8 @@
 
 namespace Arrilot\Collectors;
 
+use Illuminate\Support\Arr;
+
 abstract class Collector
 {
     /**
@@ -121,7 +123,12 @@ abstract class Collector
     protected function collectIdsFromItem($item, array $fields)
     {
         foreach ($fields as $field) {
-            foreach ((array) $item[$field] as $id) {
+            $ids = Arr::get($item, $field, []);
+            if (is_object($ids) && method_exists($ids, 'toArray')) {
+                $ids = $ids->toArray();
+            }
+
+            foreach ( (array) $ids as $id) {
                 if ((int) $id) {
                     $this->ids[] = (int) $id;
                 }

@@ -85,8 +85,13 @@ $files = $collector->select(['id', 'name'])->performQuery();
 
 Same is true for an additional filter.
 ```php
-$files = $collector->where(['active' => 1])->performQuery();
+$collector->fromCollection($elements, 'files');
 // $this->where is ['active' => 1]
+```
+
+You can use dot notation to locate a field, e.g
+```php
+$collector->fromItem($item, 'properties.files');
 ```
 
 ## Bridge packages
