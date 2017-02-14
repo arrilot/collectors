@@ -49,11 +49,11 @@ Example
     ];
     
     $collector = new FooCollector();
-    $collector->fromCollection($elements, 'files');
-    $collector->fromItem($item, 'another_files'); 
-    // You can pass several fields as array  - $collector->fromItem($item, ['field_1', 'field_2']);
-    $files = $collector->performQuery();
+    $collector->scanCollection($elements, 'files');
+    $collector->scanItem($item, 'another_files'); 
+    // You can also pass several fields as array  - $collector->scanItem($item, ['field_1', 'field_2']);
     
+    $files = $collector->performQuery();
     var_dump($files);
 
     // result

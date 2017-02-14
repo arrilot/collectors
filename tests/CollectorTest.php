@@ -2,6 +2,7 @@
 
 namespace Arrilot\Tests\Collectors;
 
+use Arrilot\Tests\Collectors\Stubs\FooArrayAccessClass;
 use Arrilot\Tests\Collectors\Stubs\FooCollector;
 use Illuminate\Support\Collection;
 use PHPUnit_Framework_TestCase;
@@ -31,7 +32,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals($expected, $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_can_collect_from_a_collection_with_empty_or_null_field()
@@ -56,7 +57,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals($expected, $collector->scanCollection($collection, 'file')->performQuery());
     }
     
     public function test_it_can_collect_from_illuminate_collection()
@@ -82,7 +83,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals($expected, $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_can_collect_from_a_collection_with_multivalue_fields()
@@ -112,7 +113,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected,  $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals($expected,  $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_can_collect_from_a_collection_with_multivalue_fields_as_illuminate_collection()
@@ -142,7 +143,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected,  $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals($expected,  $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_can_collect_from_a_collection_with_multiple_fields_passed_as_an_array()
@@ -178,7 +179,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromCollection($collection, ['file', 'file2'])->performQuery());
+        $this->assertEquals($expected, $collector->scanCollection($collection, ['file', 'file2'])->performQuery());
     }
 
     public function test_it_can_collect_from_a_single_item()
@@ -195,7 +196,57 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromItem($item, 'file')->performQuery());
+        $this->assertEquals($expected, $collector->scanItem($item, 'file')->performQuery());
+    }
+
+    public function test_it_can_collect_from_a_array_access_object()
+    {
+        $collector = new FooCollector();
+        $item = new FooArrayAccessClass([
+            'file' => 2,
+        ]);
+        
+        $expected = [
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
+            ],
+        ];
+        
+        $this->assertEquals($expected, $collector->scanItem($item, 'file')->performQuery());
+    }
+
+    public function test_it_can_collect_from_a_collection_of_array_access_objects()
+    {
+        $collector = new FooCollector();
+
+        $collection = [
+            new FooArrayAccessClass([
+                'id' => 1,
+                'file'  => 2,
+            ]),
+            new FooArrayAccessClass([
+                'id' => 2,
+                'file'  => [3, 4],
+            ]),
+        ];
+        
+        $expected = [
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
+            ],
+            3 => [
+                'id'  => 3,
+                'foo' => 'bar',
+            ],
+            4 => [
+                'id'  => 4,
+                'foo' => 'bar',
+            ],
+        ];
+        
+        $this->assertEquals($expected, $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_can_collect_from_a_single_item_and_a_collection_at_the_same_time()
@@ -215,8 +266,8 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $collector->fromItem($item, 'file');
-        $collector->fromCollection($collection, 'file');
+        $collector->scanItem($item, 'file');
+        $collector->scanCollection($collection, 'file');
 
         $expected = [
             2 => [
@@ -257,7 +308,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $collector->fromCollection($collection, 'file')->select(['foo'])->performQuery());
+        $this->assertEquals($expected, $collector->scanCollection($collection, 'file')->select(['foo'])->performQuery());
     }
 
     public function test_it_can_return_if_no_ids_are_found()
@@ -272,7 +323,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $this->assertEquals([], $collector->fromCollection($collection, 'file')->performQuery());
+        $this->assertEquals([], $collector->scanCollection($collection, 'file')->performQuery());
     }
 
     public function test_it_does_not_raise_undefined_index_if_the_field_is_not_present()
@@ -283,7 +334,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             'id' => 3,
         ];
         
-        $collector->fromItem($item, 'file');
+        $collector->scanItem($item, 'file');
         
         $this->assertEquals([], $collector->performQuery());
     }
@@ -300,7 +351,7 @@ class CollectorTest extends PHPUnit_Framework_TestCase
             ],
         ];
 
-        $collector->fromItem($item, 'element.file');
+        $collector->scanItem($item, 'element.file');
 
         $expected = [
             2 => [

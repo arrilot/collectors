@@ -49,7 +49,7 @@ abstract class Collector
      * @param mixed $fields
      * @return $this
      */
-    public function fromCollection($collection, $fields)
+    public function scanCollection($collection, $fields)
     {
         $fields = (array) $fields;
         foreach ($collection as $item) {
@@ -66,7 +66,7 @@ abstract class Collector
      * @param mixed $fields
      * @return $this
      */
-    public function fromItem($item, $fields)
+    public function scanItem($item, $fields)
     {
         $fields = (array) $fields;
         $this->collectIdsFromItem($item, $fields);
