@@ -107,7 +107,7 @@ abstract class Collector
      */
     public function performQuery()
     {
-        if (!$this->ids) {
+        if (empty($this->ids)) {
             return [];
         }
 
@@ -123,17 +123,26 @@ abstract class Collector
     protected function collectIdsFromItem($item, array $fields)
     {
         foreach ($fields as $field) {
-            $ids = Arr::get($item, $field, []);
-            if (is_object($ids) && method_exists($ids, 'toArray')) {
-                $ids = $ids->toArray();
-            }
-
-            foreach ( (array) $ids as $id) {
+            foreach ($this->collectIdsFromField($item, $field) as $id) {
                 if ((int) $id) {
                     $this->ids[] = (int) $id;
                 }
             }
         }
+    }
+    
+    /**
+     * Collect ids from field of item
+     *
+     * @param $item
+     * @param string $field
+     * @return array
+     */
+    protected function collectIdsFromField($item, $field)
+    {
+        $ids = Arr::get($item, $field, []);
+
+        return is_object($ids) && method_exists($ids, 'toArray') ? $ids->toArray() : (array) $ids;
     }
 
     /**
