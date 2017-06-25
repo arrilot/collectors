@@ -199,6 +199,28 @@ class CollectorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $collector->scanItem($item, 'file')->performQuery());
     }
 
+    public function test_it_allows_to_manually_add_ids()
+    {
+        $collector = new FooCollector();
+
+        $expected = [
+            3 => [
+                'id'  => 3,
+                'foo' => 'bar',
+            ],
+            4 => [
+                'id'  => 4,
+                'foo' => 'bar',
+            ],
+            2 => [
+                'id'  => 2,
+                'foo' => 'bar',
+            ],
+        ];
+
+        $this->assertEquals($expected, $collector->addIds([3, 4, 2])->performQuery());
+    }
+
     public function test_it_can_collect_from_a_array_access_object()
     {
         $collector = new FooCollector();

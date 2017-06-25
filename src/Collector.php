@@ -75,6 +75,23 @@ abstract class Collector
     }
 
     /**
+     * Add existeing ids array source.
+     *
+     * @param array $ids
+     * @return $this
+     */
+    public function addIds($ids)
+    {
+        foreach ($ids as $id) {
+            if ((int) $id) {
+                $this->ids[] = (int) $id;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Setter for select.
      *
      * @param mixed $select
