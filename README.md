@@ -78,6 +78,11 @@ Example
     */
 ```
 
+You can manually add additional ids if you already know them.
+```php
+$files = $collector->addIds([626, 277, 23])->performQuery();
+```
+
 You can pass `select` to `getlist` like that:
 ```php
 $files = $collector->select(['id', 'name'])->performQuery();
